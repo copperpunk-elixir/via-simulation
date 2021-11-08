@@ -2,10 +2,9 @@ defmodule ViaSimulation.Comms do
   require Logger
   require ViaUtils.Shared.Groups, as: Groups
   require ViaUtils.Shared.ValueNames, as: SVN
-  require ViaUtils.Ubx.ClassDefs
-  require ViaUtils.Ubx.Nav.Pvt, as: Pvt
-  require ViaUtils.Ubx.Nav.Relposned, as: Relposned
-  require ViaUtils.Ubx.AccelGyro.DtAccelGyro, as: DtAccelGyro
+  require ViaTelemetry.Ubx.Nav.Pvt, as: Pvt
+  require ViaTelemetry.Ubx.Nav.Relposned, as: Relposned
+  require ViaTelemetry.Ubx.AccelGyro.DtAccelGyro, as: DtAccelGyro
 
   @spec publish_gps_itow_position_velocity(any(), map(), map(), any()) :: atom()
   def publish_gps_itow_position_velocity(operator_name, position_rrm, velocity_mps, group) do
@@ -54,11 +53,17 @@ defmodule ViaSimulation.Comms do
         group
       )
     else
-      itow_ms = nil
+      itow_s = nil
+
+      values = %{
+        SVN.itow_s() => itow_s,
+        SVN.position_rrm() => position_rrm,
+        SVN.velocity_mps() => velocity_mps
+      }
 
       ViaUtils.Comms.cast_global_msg_to_group(
         operator_name,
-        {group, itow_ms, position_rrm, velocity_mps},
+        {group, values},
         self()
       )
     end
@@ -95,11 +100,13 @@ defmodule ViaSimulation.Comms do
 
       # Logger.debug("pub relhdg: #{ViaUtils.Format.eftb_deg(rel_heading_rad, 1)}")
     else
-      itow_ms = nil
+      itow_s = nil
+
+      values = %{SVN.itow_s() => itow_s, SVN.yaw_rad() => rel_heading_rad}
 
       ViaUtils.Comms.cast_global_msg_to_group(
         operator_name,
-        {group, itow_ms, rel_heading_rad},
+        {group, values},
         self()
       )
     end
@@ -108,7 +115,7 @@ defmodule ViaSimulation.Comms do
   @spec publish_dt_accel_gyro(any(), float(), map(), map(), any()) :: atom()
   def publish_dt_accel_gyro(operator_name, dt_s, accel_mpss, gyro_rps, group) do
     value_map =
-      %{DtAccelGyro.dt_s() => dt_s}
+      %{SVN.dt_s() => dt_s}
       |> Map.merge(accel_mpss)
       |> Map.merge(gyro_rps)
 

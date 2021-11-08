@@ -23,6 +23,7 @@ defmodule ViaSimulation.MixProject do
     [
       {:via_utils,
        path: "/home/ubuntu/Documents/Github/cp-elixir/libraries/via-utils", override: true},
+      {:via_telemetry, path: "/home/ubuntu/Documents/Github/cp-elixir/libraries/via-telemetry"},
       {:ubx_interpreter,
        path: "/home/ubuntu/Documents/Github/cp-elixir/libraries/ubx-interpreter"}
       # {:dep_from_hexpm, "~> 0.3.0"},
