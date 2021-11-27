@@ -2,9 +2,9 @@ defmodule ViaSimulation.Comms do
   require Logger
   require ViaUtils.Shared.Groups, as: Groups
   require ViaUtils.Shared.ValueNames, as: SVN
-  require ViaTelemetry.Ubx.Nav.Pvt, as: Pvt
-  require ViaTelemetry.Ubx.Nav.Relposned, as: Relposned
-  require ViaTelemetry.Ubx.AccelGyro.DtAccelGyro, as: DtAccelGyro
+  require ViaTelemetry.Ubx.StandardNav.Pvt, as: Pvt
+  require ViaTelemetry.Ubx.StandardNav.Relposned, as: Relposned
+  require ViaTelemetry.Ubx.Companion.DtAccelGyro, as: DtAccelGyro
 
   @spec publish_gps_itow_position_velocity(any(), map(), map(), any()) :: atom()
   def publish_gps_itow_position_velocity(operator_name, position_rrm, velocity_mps, group) do
